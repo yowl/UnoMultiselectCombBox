@@ -55,7 +55,4 @@ namespace UnoMultiselect
         public string Code { get; set; }
         public string Name { get; set; }
     }
-    public class ComboBox2 : ComboBox
-    {
-    }
 }

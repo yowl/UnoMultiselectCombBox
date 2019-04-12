@@ -59,10 +59,12 @@ namespace TheHub.Wasm.Controls.CheckableCombo
                 <CheckBox local:MultiSelectComboBoxService.ComboBoxItemLoaded=""True""
                     IsChecked=""{Binding Path=(local:MultiSelectComboBoxService.IsChecked), Mode=TwoWay, RelativeSource={RelativeSource Self}}"" />
                 </DataTemplate>";
-//            ItemTemplate = (DataTemplate)XamlReader.Load(xaml);
+            ItemTemplate = (DataTemplate)XamlReader.Load(xaml);
 
             SelectedItems = new ObservableCollection<object>();
-//            IsDropDownTabNavigationEnabled = false;
+            //            IsDropDownTabNavigationEnabled = false;
+            Debug.WriteLine("multiselect created");
+
         }
 
         #endregion
