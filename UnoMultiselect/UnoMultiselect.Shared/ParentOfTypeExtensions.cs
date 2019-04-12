@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media;
 
 namespace UnoMultiselect.Shared
 {
-    // copied from Telerik Silverlight
+    // copied from Telerik Wasm
     public static class ParentOfTypeExtensions
     {
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> enumerable)

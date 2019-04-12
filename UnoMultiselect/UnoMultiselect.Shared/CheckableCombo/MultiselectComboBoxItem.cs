@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace TheHub.Silverlight.Controls.CheckableCombo
+namespace TheHub.Wasm.Controls.CheckableCombo
 {
     /// <summary>
     /// Item for MultiSelectComboBox

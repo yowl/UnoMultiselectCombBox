@@ -25,6 +25,37 @@ namespace UnoMultiselect
         public MainPage()
         {
             this.InitializeComponent();
+            Items = new List<Entity>
+                    {
+                        new Entity
+                        {
+                            Code = "1",
+                            Name = "first"
+                        },
+                        new Entity
+                        {
+                            Code = "2",
+                            Name = "second"
+                        },
+                        new Entity
+                        {
+                            Code = "3",
+                            Name = "third"
+                        },
+                    };
+
+            DataContext = this;
         }
+
+        public List<Entity> Items { get; set; }
+    }
+
+    public class Entity
+    {
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
+    public class ComboBox2 : ComboBox
+    {
     }
 }

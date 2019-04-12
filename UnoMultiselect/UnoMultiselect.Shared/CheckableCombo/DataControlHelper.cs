@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace TheHub.Silverlight.Controls.CheckableCombo
+namespace TheHub.Wasm.Controls.CheckableCombo
 {
     public static class DataControlHelper
     {

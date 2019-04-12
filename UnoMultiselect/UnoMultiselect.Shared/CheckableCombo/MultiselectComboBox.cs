@@ -10,12 +10,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Markup;
-using Uno;
 using UnoMultiselect.Shared;
 
 //using TextSearch = Telerik.Windows.Controls.TextSearch;
 
-namespace TheHub.Silverlight.Controls.CheckableCombo
+namespace TheHub.Wasm.Controls.CheckableCombo
 {
     /// <summary>
     /// MultiSelect ComboBox
@@ -44,7 +43,7 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
 //                @"<DataTemplate 
 //                xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
 //                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
-//                xmlns:local=""clr-namespace:TheHub.Silverlight.Controls.CheckableCombo;assembly=TheHub.Silverlight"">
+//                xmlns:local=""clr-namespace:TheHub.Wasm.Controls.CheckableCombo;assembly=TheHub.Wasm"">
 //                <TextBlock TextWrapping=""Wrap"" local:MultiSelectComboBoxService.SelectionBoxLoaded=""True"" />
 //                </DataTemplate>";
 //
@@ -56,11 +55,11 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
                 @"<DataTemplate 
                 xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
                 xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""    
-                xmlns:local=""clr-namespace:TheHub.Silverlight.Controls.CheckableCombo;assembly=TheHub.Silverlight"">
+                xmlns:local=""using:TheHub.Wasm.Controls.CheckableCombo"">
                 <CheckBox local:MultiSelectComboBoxService.ComboBoxItemLoaded=""True""
                     IsChecked=""{Binding Path=(local:MultiSelectComboBoxService.IsChecked), Mode=TwoWay, RelativeSource={RelativeSource Self}}"" />
                 </DataTemplate>";
-            ItemTemplate = (DataTemplate)XamlReader.Load(xaml);
+//            ItemTemplate = (DataTemplate)XamlReader.Load(xaml);
 
             SelectedItems = new ObservableCollection<object>();
 //            IsDropDownTabNavigationEnabled = false;
@@ -163,13 +162,13 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
 
             int idx;
             var selectedItems = SelectedItems;
-            var te = e as NotifyCollectionChangedEventArgs;
-            switch (te.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Reset:
-                    var items = te.NewItems;
+//            var te = e as NotifyCollectionChangedEventArgs; // ItemsChangedEventArgs maybe?
+//            switch (te.Action)
+//            {
+//                case NotifyCollectionChangedAction.Add:
+//                case NotifyCollectionChangedAction.Replace:
+//                case NotifyCollectionChangedAction.Reset:
+                    var items = Items;
                     foreach (object value in SelectedValues)
                     {
                         foreach (object item in items.EmptyIfNull())
@@ -180,18 +179,18 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
                             }
                         }
                     }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (object item in te.OldItems)
-                    {
-                        idx = selectedItems.IndexOf(item);
-                        if (idx >= 0)
-                        {
-                            selectedItems.RemoveAt(idx);
-                        }
-                    }
-                    break;
-            }
+//                    break;
+//                case NotifyCollectionChangedAction.Remove:
+//                    foreach (object item in te.OldItems)
+//                    {
+//                        idx = selectedItems.IndexOf(item);
+//                        if (idx >= 0)
+//                        {
+//                            selectedItems.RemoveAt(idx);
+//                        }
+//                    }
+//                    break;
+//            }
         }
 
         private void RemoveCollectionChangedEvents()
@@ -317,7 +316,7 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
         public void UpdateSource()
         {
             var binding = GetBindingExpression(SelectedItemsProperty);
-            binding.UpdateSource();
+            if(binding != null) binding.UpdateSource();
         }
 
 
@@ -363,7 +362,7 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
 
         private void UpdateSelectedItem(object item, bool select)
         {
-            var obj = ItemContainerGenerator.ContainerFromItem(item);
+            var obj = ContainerFromItem(item);
             if (obj != null)
             {
                 var cb = obj.FindChildByType<CheckBox>();
@@ -380,10 +379,10 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
         {
             foreach (var si in SelectedItems)
             {
-                var x = ItemContainerGenerator.ContainerFromItem(si);
+                var x = ContainerFromItem(si);
                 Debug.WriteLine(x);
             }
-            var obj = ItemContainerGenerator.ItemFromContainer(checkBox.GetVisualParent<MultiSelectComboBoxItem>());
+            var obj = ItemFromContainer(checkBox.GetVisualParent<MultiSelectComboBoxItem>());
             if (obj != null)
             {
                 checkBox.IsChecked = SelectedItems.Any(si => si == obj);
@@ -443,6 +442,7 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
         List<object> oldValues;
         protected override void OnDropDownOpened(object e)
         {
+            Debug.WriteLine("drop down opened");
             base.OnDropDownOpened(e);
             oldValues = new List<object>(SelectedValues);
         }

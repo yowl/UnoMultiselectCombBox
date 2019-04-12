@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using UnoMultiselect.Shared;
 
-namespace TheHub.Silverlight.Controls.CheckableCombo
+namespace TheHub.Wasm.Controls.CheckableCombo
 {
     /// <summary>
     /// Service for the MultiSelect comboBox
@@ -83,7 +83,7 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
             {
                 targetElement.SetBinding(TextBlock.TextProperty, new Binding()
                 {
-                    Path = "SelectedItemsContents",
+                    Path = new PropertyPath("SelectedItemsContents"),
                     Converter = new MultiSelectComboBoxConverter(),
                     Source = comboBox,
                     ConverterParameter = comboBox.DisplayBindingPath
@@ -129,11 +129,11 @@ namespace TheHub.Silverlight.Controls.CheckableCombo
         {
             FrameworkElement element = (FrameworkElement)sender;
             MultiSelectComboBox comboBox = GetComboBox(element);
-            if (comboBox != null)
+            if (comboBox?.DisplayBindingPath != null)
             {
                 element.SetBinding(CheckBox.ContentProperty, new Binding
                                                              {
-                                                                 Path = comboBox.DisplayBindingPath
+                                                                 Path = new PropertyPath(comboBox.DisplayBindingPath)
                                                              });
                 comboBox.UpdateSelectedContainer(element as ToggleButton, element.GetVisualParent<MultiSelectComboBoxItem>(), true);
             }

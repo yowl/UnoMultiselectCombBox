@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace TheHub.Silverlight.Controls.CheckableCombo
+namespace TheHub.Wasm.Controls.CheckableCombo
 {
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {

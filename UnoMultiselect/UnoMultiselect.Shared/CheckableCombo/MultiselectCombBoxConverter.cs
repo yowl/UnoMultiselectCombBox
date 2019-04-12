@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Windows.UI.Xaml.Data;
 
-namespace TheHub.Silverlight.Controls.CheckableCombo
+namespace TheHub.Wasm.Controls.CheckableCombo
 {
     public class MultiSelectComboBoxConverter : IValueConverter
     {
