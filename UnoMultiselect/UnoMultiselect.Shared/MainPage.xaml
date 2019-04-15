@@ -9,6 +9,6 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <checkableCombo:MultiSelectComboBox ItemsSource="{Binding Items}"></checkableCombo:MultiSelectComboBox>
+        <checkableCombo:MultiSelectComboBox ItemsSource="{Binding Items}" SelectedValuePath="Code" DisplayBindingPath="Name" SelectedItems="{Binding SelectedItems, Mode=TwoWay}" PlaceholderText="choose items"></checkableCombo:MultiSelectComboBox>
     </Grid>
 </Page>

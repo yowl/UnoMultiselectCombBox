@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,6 +27,15 @@ namespace UnoMultiselect
         public MainPage()
         {
             this.InitializeComponent();
+            SelectedItems = new ObservableCollection<object>();
+            SelectedItems.CollectionChanged += (sender, args) =>
+            {
+                Debug.WriteLine("collection now");
+                foreach (var selectedItem in SelectedItems)
+                {
+                    Debug.WriteLine(selectedItem);
+                }
+            };
             Items = new List<Entity>
                     {
                         new Entity
@@ -48,11 +59,17 @@ namespace UnoMultiselect
         }
 
         public List<Entity> Items { get; set; }
+        public ObservableCollection<object> SelectedItems { get; set; }
     }
 
     public class Entity
     {
         public string Code { get; set; }
         public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Code} {Name}";
+        }
     }
 }

@@ -37,34 +37,38 @@ namespace TheHub.Wasm.Controls.CheckableCombo
         /// </summary>
         public MultiSelectComboBox()
         {
-//            ClearSelectionButtonVisibility = Visibility.Collapsed;
+            //            ClearSelectionButtonVisibility = Visibility.Collapsed;
 
+#if !__WASM__
 //            string xaml =
 //                @"<DataTemplate 
 //                xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
 //                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
-//                xmlns:local=""clr-namespace:TheHub.Wasm.Controls.CheckableCombo;assembly=TheHub.Wasm"">
+//                xmlns:local=""local:TheHub.Wasm.Controls.CheckableCombo"">
 //                <TextBlock TextWrapping=""Wrap"" local:MultiSelectComboBoxService.SelectionBoxLoaded=""True"" />
 //                </DataTemplate>";
-//
+//            
 //            var selectionBoxTemplate = (DataTemplate)XamlReader.Load(xaml);
 //            SelectionBoxTemplate = selectionBoxTemplate;
-//            EmptySelectionBoxTemplate = selectionBoxTemplate;
-
-            var xaml =
-                @"<DataTemplate 
-                xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
-                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""    
-                xmlns:local=""using:TheHub.Wasm.Controls.CheckableCombo"">
-                <CheckBox local:MultiSelectComboBoxService.ComboBoxItemLoaded=""True""
-                    IsChecked=""{Binding Path=(local:MultiSelectComboBoxService.IsChecked), Mode=TwoWay, RelativeSource={RelativeSource Self}}"" />
-                </DataTemplate>";
-            ItemTemplate = (DataTemplate)XamlReader.Load(xaml);
-
+////            EmptySelectionBoxTemplate = selectionBoxTemplate;
+//
+//            // this is in StyleWorkarounds
+//            string xaml =
+//                @"<DataTemplate 
+//                xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+//                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""    
+//                xmlns:local=""using:TheHub.Wasm.Controls.CheckableCombo"">
+//                <CheckBox local:MultiSelectComboBoxService.ComboBoxItemLoaded=""True""
+//                    IsChecked=""{Binding Path=(local:MultiSelectComboBoxService.IsChecked), Mode=TwoWay, RelativeSource={RelativeSource Self}}"" />
+//                </DataTemplate>";
+//            ItemTemplate = (DataTemplate)XamlReader.Load(xaml);
+#endif
             SelectedItems = new ObservableCollection<object>();
+            ContentPresenterVisible = Visibility.Collapsed;
             //            IsDropDownTabNavigationEnabled = false;
             Debug.WriteLine("multiselect created");
-
+//            ItemTemplateSelector = new MultiSelectItemTemplateSelector();
+//            IsItemItsOwnContainerOverride = false;
         }
 
         #endregion
@@ -107,6 +111,41 @@ namespace TheHub.Wasm.Controls.CheckableCombo
         {
             get { return GetValue(SelectedItemsProperty) as ObservableCollection<object>; }
             set { SetValue(SelectedItemsProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectionBoxTemplateProperty = DependencyProperty.Register(
+            "SelectionBoxTemplate", typeof(DataTemplate), typeof(MultiSelectComboBox), new PropertyMetadata(default(DataTemplate), (o, args) =>
+            {
+                var cm = (MultiSelectComboBox)o;
+//                ((MultiSelectItemTemplateSelector)cm.ItemTemplateSelector).SelectionBoxTemplate = cm.SelectionBoxTemplate;
+            }));
+
+        public static readonly DependencyProperty ContentPresenterVisibleProperty = DependencyProperty.Register(
+            "ContentPresenterVisible", typeof(Visibility), typeof(MultiSelectComboBox), new PropertyMetadata(default(Visibility)));
+
+        public Visibility ContentPresenterVisible
+        {
+            get { return (Visibility) GetValue(ContentPresenterVisibleProperty); }
+            set { SetValue(ContentPresenterVisibleProperty, value); }
+        }
+
+        public DataTemplate SelectionBoxTemplate
+        {
+            get { return (DataTemplate) GetValue(SelectionBoxTemplateProperty); }
+            set { SetValue(SelectionBoxTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty PopupItemTemplateProperty = DependencyProperty.Register(
+            "PopupItemTemplate", typeof(DataTemplate), typeof(MultiSelectComboBox), new PropertyMetadata(default(DataTemplate), (o, args) =>
+            {
+                var cm = (MultiSelectComboBox) o;
+//                ((MultiSelectItemTemplateSelector) cm.ItemTemplateSelector).PopupTemplate = cm.PopupItemTemplate;
+            }));
+
+        public DataTemplate PopupItemTemplate
+        {
+            get { return (DataTemplate)GetValue(PopupItemTemplateProperty); }
+            set { SetValue(PopupItemTemplateProperty, value); }
         }
 
         ObservableCollection<object> selectedValues;
@@ -271,6 +310,16 @@ namespace TheHub.Wasm.Controls.CheckableCombo
                     UpdateSelectedItem(item, true);
                 }
             }
+            UpdateComboBoxSelectedItem();
+        }
+
+        void UpdateComboBoxSelectedItem()
+        {
+            if (SelectedItems.IsNullOrEmpty())
+            {
+                SelectedIndex = -1;
+            }
+            else SelectedItem = SelectedItems.First();
         }
 
         object GetSelectedValue(object item)
@@ -449,4 +498,21 @@ namespace TheHub.Wasm.Controls.CheckableCombo
             oldValues = new List<object>(SelectedValues);
         }
     }
+
+//    public class MultiSelectItemTemplateSelector : DataTemplateSelector
+//    {
+//        public DataTemplate PopupTemplate { get; set; }
+//        public DataTemplate SelectionBoxTemplate { get; set; }
+//
+//        protected override DataTemplate SelectTemplateCore(object item)
+//        {
+//            return base.SelectTemplateCore(item);
+//        }
+//
+//        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+//        {
+//            if (container is ContentPresenter) return SelectionBoxTemplate;
+//            return PopupTemplate;
+//        }
+//    }
 }

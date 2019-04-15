@@ -10,6 +10,11 @@ namespace UnoMultiselect.Shared
     // copied from Telerik Wasm
     public static class ParentOfTypeExtensions
     {
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable == null || !enumerable.Any();
+        }
+
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> enumerable)
         {
             return enumerable ?? Enumerable.Empty<T>();

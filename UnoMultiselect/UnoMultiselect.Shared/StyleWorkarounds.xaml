@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:hse="using:TheHub.Wasm.Controls.CheckableCombo"
-    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 					xmlns:xamarin="http://uno.ui/xamarin"
 					xmlns:ios="http://uno.ui/ios"
@@ -16,10 +15,12 @@
 
     <!-- wasm Uno workarounds -->
 
-    <xamarin:Style TargetType="hse:MultiSelectComboBox"
-           BasedOn="{StaticResource xDefaultComboBoxStyle}" />
+    <!-- <xamarin:Style TargetType="hse:MultiSelectComboBox" -->
+    <!--        BasedOn="{StaticResource xDefaultComboBoxStyle}" /> -->
+    <Style TargetType="hse:MultiSelectComboBox"
+                   BasedOn="{StaticResource xDefaultComboBoxStyle}" />
 
-    <xamarin:Style x:Key="xDefaultComboBoxStyle" TargetType="hse:MultiSelectComboBox">
+    <Style x:Key="xDefaultComboBoxStyle" TargetType="hse:MultiSelectComboBox">
         <Setter Property="Padding"
 				Value="12,5,0,7" />
         <Setter Property="MinWidth"
@@ -65,9 +66,24 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <CheckBox hse:MultiSelectComboBoxService.ComboBoxItemLoaded="True"
+                              IsChecked="{Binding Path=(hse:MultiSelectComboBoxService.IsChecked), Mode=TwoWay, RelativeSource={RelativeSource Self}}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="SelectionBoxTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock TextWrapping="Wrap" hse:MultiSelectComboBoxService.SelectionBoxLoaded="True" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="ComboBox">
+                <ControlTemplate TargetType="hse:MultiSelectComboBox">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -214,7 +230,7 @@
                             <VisualStateGroup x:Name="DropDownStates">
                                 <VisualState x:Name="Opened">
                                     <Storyboard>
-                                        <win:SplitOpenThemeAnimation OpenedTargetName="PopupBorder"
+                                        <SplitOpenThemeAnimation OpenedTargetName="PopupBorder"
 																	 ClosedTargetName="ContentPresenter"
 																	 OffsetFromCenter="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.DropDownOffset}"
 																	 OpenedLength="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.DropDownOpenedHeight}" />
@@ -222,7 +238,7 @@
                                 </VisualState>
                                 <VisualState x:Name="Closed">
                                     <Storyboard>
-                                        <win:SplitCloseThemeAnimation OpenedTargetName="PopupBorder"
+                                        <SplitCloseThemeAnimation OpenedTargetName="PopupBorder"
 																	  ClosedTargetName="ContentPresenter"
 																	  OffsetFromCenter="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.DropDownOffset}"
 																	  OpenedLength="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.DropDownOpenedHeight}" />
@@ -251,17 +267,29 @@
 								BorderBrush="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"
 								BorderThickness="{TemplateBinding BorderThickness}"
 								Opacity="0" />
+                        <!-- ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" -->
+
                         <ContentPresenter x:Name="ContentPresenter"
-										  Grid.Row="1"
-										  ContentTemplate="{TemplateBinding ItemTemplate}"
-										  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          Visibility="{TemplateBinding ContentPresenterVisible}"
+                                          Grid.Row="1"
+										  ContentTemplate="{TemplateBinding SelectionBoxTemplate}"
 										  Margin="{TemplateBinding Padding}"
 										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                            <TextBlock x:Name="PlaceholderTextBlock"
-									   Text="{TemplateBinding PlaceholderText}"
-									   Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" />
+            <!--                 <TextBlock x:Name="PlaceholderTextBlock" -->
+									   <!-- Text="{TemplateBinding PlaceholderText}" -->
+									   <!-- Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" /> -->
                         </ContentPresenter>
+                        <ContentPresenter Grid.Row="1"
+                                          ContentTemplate="{TemplateBinding SelectionBoxTemplate}"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <!--                 <TextBlock x:Name="PlaceholderTextBlock" -->
+                            <!-- Text="{TemplateBinding PlaceholderText}" -->
+                            <!-- Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" /> -->
+                        </ContentPresenter>
+                        <!-- <TextBlock Grid.Row="1" Text="asdafsdf"></TextBlock> -->
                         <not_android:FontIcon x:Name="DropDownGlyph"
 											  Grid.Row="1"
 											  Grid.Column="1"
@@ -295,7 +323,7 @@
 									HorizontalAlignment="Stretch">
                                 <ScrollViewer x:Name="ScrollViewer"
 											  Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
-											  win:MinWidth="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.DropDownContentMinWidth}"
+											  MinWidth="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.DropDownContentMinWidth}"
 											  VerticalSnapPointsType="OptionalSingle"
 											  VerticalSnapPointsAlignment="Near"
 											  HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
@@ -308,7 +336,8 @@
 											  BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}"
 											  ZoomMode="Disabled"
 											  AutomationProperties.AccessibilityView="Raw">
-                                    <ItemsPresenter Margin="{ThemeResource ComboBoxDropdownContentMargin}" />
+                                    <ItemsPresenter Margin="{ThemeResource ComboBoxDropdownContentMargin}"
+                                                    />
                                 </ScrollViewer>
                             </Border>
                         </Popup>
@@ -316,7 +345,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </xamarin:Style>
+    </Style>
 
 
 
