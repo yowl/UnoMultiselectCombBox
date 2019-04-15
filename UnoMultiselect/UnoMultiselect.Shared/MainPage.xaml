@@ -7,8 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:checkableCombo="using:TheHub.Wasm.Controls.CheckableCombo"
     mc:Ignorable="d">
-
+    <Page.Resources>
+        <DataTemplate x:Key="checkboxTemplate">
+            <CheckBox />
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <checkableCombo:MultiSelectComboBox ItemsSource="{Binding Items}" SelectedValuePath="Code" DisplayBindingPath="Name" SelectedItems="{Binding SelectedItems, Mode=TwoWay}" PlaceholderText="choose items"></checkableCombo:MultiSelectComboBox>
+        <checkableCombo:MultiSelectComboBox ItemsSource="{Binding Items}" ItemTemplate="{StaticResource checkboxTemplate}"></checkableCombo:MultiSelectComboBox>
     </Grid>
 </Page>

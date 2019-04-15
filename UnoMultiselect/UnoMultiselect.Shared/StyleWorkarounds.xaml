@@ -13,10 +13,7 @@
     mc:Ignorable="d xamarin ios android not_wasm wasm"   >
 
 
-    <!-- wasm Uno workarounds -->
 
-    <!-- <xamarin:Style TargetType="hse:MultiSelectComboBox" -->
-    <!--        BasedOn="{StaticResource xDefaultComboBoxStyle}" /> -->
     <Style TargetType="hse:MultiSelectComboBox"
                    BasedOn="{StaticResource xDefaultComboBoxStyle}" />
 
@@ -64,21 +61,6 @@
                 <ItemsPanelTemplate>
                     <CarouselPanel />
                 </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <CheckBox hse:MultiSelectComboBoxService.ComboBoxItemLoaded="True"
-                              IsChecked="{Binding Path=(hse:MultiSelectComboBoxService.IsChecked), Mode=TwoWay, RelativeSource={RelativeSource Self}}" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="SelectionBoxTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <TextBlock TextWrapping="Wrap" hse:MultiSelectComboBoxService.SelectionBoxLoaded="True" />
-                </DataTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">
@@ -267,29 +249,17 @@
 								BorderBrush="{ThemeResource SystemControlHighlightBaseMediumLowBrush}"
 								BorderThickness="{TemplateBinding BorderThickness}"
 								Opacity="0" />
-                        <!-- ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" -->
 
                         <ContentPresenter x:Name="ContentPresenter"
-                                          Visibility="{TemplateBinding ContentPresenterVisible}"
                                           Grid.Row="1"
-										  ContentTemplate="{TemplateBinding SelectionBoxTemplate}"
+										  ContentTemplate="{TemplateBinding ItemTemplate}"
 										  Margin="{TemplateBinding Padding}"
 										  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
 										  VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-            <!--                 <TextBlock x:Name="PlaceholderTextBlock" -->
-									   <!-- Text="{TemplateBinding PlaceholderText}" -->
-									   <!-- Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" /> -->
+                            <TextBlock x:Name="PlaceholderTextBlock"
+									   Text="{TemplateBinding PlaceholderText}"
+									   Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" />
                         </ContentPresenter>
-                        <ContentPresenter Grid.Row="1"
-                                          ContentTemplate="{TemplateBinding SelectionBoxTemplate}"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                            <!--                 <TextBlock x:Name="PlaceholderTextBlock" -->
-                            <!-- Text="{TemplateBinding PlaceholderText}" -->
-                            <!-- Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" /> -->
-                        </ContentPresenter>
-                        <!-- <TextBlock Grid.Row="1" Text="asdafsdf"></TextBlock> -->
                         <not_android:FontIcon x:Name="DropDownGlyph"
 											  Grid.Row="1"
 											  Grid.Column="1"
