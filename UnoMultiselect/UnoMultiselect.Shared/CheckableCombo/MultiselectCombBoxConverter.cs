@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,7 @@ namespace TheHub.Wasm.Controls.CheckableCombo
 
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
+            Debug.WriteLine("converting");
             string displayMemberPath = parameter as string;
             if (String.IsNullOrWhiteSpace(displayMemberPath) || value == null)
             {

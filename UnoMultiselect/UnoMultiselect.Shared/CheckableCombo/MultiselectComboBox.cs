@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -168,6 +170,15 @@ namespace TheHub.Wasm.Controls.CheckableCombo
             }
         }
 
+        public static readonly DependencyProperty SelectedDisplayNamesProperty = DependencyProperty.Register(
+            "SelectedDisplayNames", typeof(string), typeof(MultiSelectComboBox), new PropertyMetadata(default(string)));
+
+        public string SelectedDisplayNames
+        {
+            get { return (string) GetValue(SelectedDisplayNamesProperty); }
+            set { SetValue(SelectedDisplayNamesProperty, value); }
+        }
+
         void HookNewValues(ObservableCollection<object> oldCollection, ObservableCollection<object> newCollection)
         {
             if (oldCollection != null)
@@ -283,7 +294,7 @@ namespace TheHub.Wasm.Controls.CheckableCombo
                 }
                 UpdateSource();
             }
-            RaiseSelectedItemsPropertyChanged();
+            SelectedDisplayNames = Convert();
         }
 
         private void RemoveSelectedValues(IList items)
@@ -361,23 +372,34 @@ namespace TheHub.Wasm.Controls.CheckableCombo
             {
                 AddCollectionChangedEvents();
             }
-            RaiseSelectedItemsPropertyChanged();
+            SelectedDisplayNames = Convert();
+        }
+
+        public string Convert()
+        {
+            Debug.WriteLine("converting");
+            if (String.IsNullOrWhiteSpace(DisplayBindingPath) || SelectedItems == null)
+            {
+                return String.Empty;
+            }
+
+            PropertyInfo propertyInfo;
+            return string.Join(", ", SelectedItems.Select(item =>
+            {
+                if (DisplayBindingPath == ".") return item;
+                propertyInfo = DataControlHelper.GetPropertyInfo(item.GetType(), DisplayBindingPath);
+                if (propertyInfo == null)
+                {
+                    return String.Empty;
+                }
+                return propertyInfo.GetValue(item, null);
+            }).ToArray());
         }
 
         public void UpdateSource()
         {
             var binding = GetBindingExpression(SelectedItemsProperty);
             if(binding != null) binding.UpdateSource();
-        }
-
-
-        private void RaiseSelectedItemsPropertyChanged()
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs("SelectedItemsContents"));
-                // To update the selection box
-            }
         }
 
         private void RemoveSelectedItems(IList values)

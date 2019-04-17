@@ -83,8 +83,7 @@ namespace TheHub.Wasm.Controls.CheckableCombo
             {
                 targetElement.SetBinding(TextBlock.TextProperty, new Binding()
                 {
-                    Path = new PropertyPath("SelectedItemsContents"),
-                    Converter = new MultiSelectComboBoxConverter(),
+                    Path = new PropertyPath("SelectedDisplayNames"),
                     Source = comboBox,
                     ConverterParameter = comboBox.DisplayBindingPath
                 });
