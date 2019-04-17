@@ -19,7 +19,6 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CheckableCombo\DataControlHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)CheckableCombo\MultiselectCombBoxConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckableCombo\MultiselectComboBox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckableCombo\MultiselectComboBoxItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CheckableCombo\MultiselectComboBoxService.cs" />
